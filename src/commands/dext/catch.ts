@@ -58,7 +58,7 @@ module.exports = class extends SlashCommand {
 			return;
 		}
 		const pokemon = interaction.options.getString("pokemon");
-		if (spawnedPokemon.name !== pokemon) {
+		if (spawnedPokemon.species.name !== pokemon) {
 			interaction.editReply({
 				embeds: [
 					new MessageEmbed({

@@ -21,6 +21,7 @@ module.exports = class MessageEvent extends ClientEvent<"messageCreate"> {
 		if (++messageAmount === defaultOptions.spawnrate && spawnChannel) {
 			messageAmount = 0;
 			const pokemon = await client.pokedex.pokemon.fetchRandom();
+			console.log(`A ${pokemon.name} has spawned in ${message.guild?.name}`);
 			client.spawnedPokemon.set(guildId, pokemon);
 			((await message.guild?.channels.fetch(spawnChannel)) as TextChannel).send({
 				embeds: [

@@ -19,13 +19,14 @@ export class Client<Ready extends boolean = boolean> extends DOSClient<Ready> {
 		globalUserVars: Database<{
 			[key: string]: any;
 		}>;
-		pokemon: Database<
-			| {
-					name: string;
-					level: number;
-			  }[]
-			| undefined
-		>;
+		pokemon: Database<{
+			[user: string]:
+				| {
+						name: string;
+						level: number;
+				  }[]
+				| undefined;
+		}>;
 		spawnChannels: Database<string>;
 	};
 
@@ -33,5 +34,17 @@ export class Client<Ready extends boolean = boolean> extends DOSClient<Ready> {
 		super(options);
 		this.databases.pokemon = new Database("pokemon");
 		this.databases.spawnChannels = new Database("spawnChannels");
+	}
+
+	public getPokemon(guild: string, user: string) {
+		return (this.databases.pokemon.get(guild) ?? {})[user] ?? [];
+	}
+
+	public setPokemon(guild: string, user: string, pokemon: {name: string; level: number}) {
+		const users = this.databases.pokemon.get(guild) ?? {};
+		const userPokemon = users[user] ?? [];
+		userPokemon.push(pokemon);
+		users[user] = userPokemon;
+		this.databases.pokemon.set(guild, users);
 	}
 }

@@ -73,10 +73,8 @@ module.exports = class extends SlashCommand {
 			return;
 		}
 		client.spawnedPokemon.delete(guildId);
-		const level = randomInt(defaultOptions.minlevel, defaultOptions.maxlevel),
-			currentPokemon = client.databases.pokemon.get(user.id) || [];
-		currentPokemon.push({name: pokemon, level: level});
-		client.databases.pokemon.set(user.id, currentPokemon);
+		const level = randomInt(defaultOptions.minlevel, defaultOptions.maxlevel);
+		client.setPokemon(interaction.guildId, interaction.user.id, {name: pokemon, level});
 		interaction.editReply({
 			embeds: [
 				new MessageEmbed({

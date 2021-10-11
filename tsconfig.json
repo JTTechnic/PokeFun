@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"moduleResolution": "node",
+		"alwaysStrict": true,
+		"pretty": false,
+		"module": "commonjs",
+		"target": "es2019",
+		"lib": ["esnext", "esnext.array", "esnext.asynciterable", "esnext.intl", "esnext.symbol"],
+		"skipDefaultLibCheck": true,
+		"outDir": "dist",
+		"allowJs": true,
+		"checkJs": true
+	},
+	"include": ["src"]
+}

@@ -16,9 +16,12 @@ module.exports = class MessageEvent extends ClientEvent<"messageCreate"> {
 		}
 		const client = message.client as Client,
 			{guildId} = message,
-			spawnChannel = client.databases.spawnChannels.get(guildId);
+			settings = client.databases.settings.get(guildId),
+			spawnChannel = settings?.spawnChannel,
+			spawnrate = settings?.spawnRate ?? defaultOptions.spawnRate;
+
 		let messageAmount = client.messageAmount.get(guildId) ?? 0;
-		if (++messageAmount === defaultOptions.spawnrate && spawnChannel) {
+		if (++messageAmount === spawnrate && spawnChannel) {
 			messageAmount = 0;
 			const pokemon = await client.pokedex.pokemon.fetchRandom();
 			console.log(`A ${pokemon.name} has spawned in ${message.guild?.name}`);

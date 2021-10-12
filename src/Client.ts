@@ -32,6 +32,8 @@ export class Client<Ready extends boolean = boolean> extends DOSClient<Ready> {
 			| {
 					spawnChannel?: string;
 					spawnRate?: number;
+					minLevel?: number;
+					maxLevel?: number;
 			  }
 			| undefined
 		>;

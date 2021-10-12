@@ -15,5 +15,8 @@ const client = new Client({
 // Remove the comment in the next line and make a dos folder in commands to add discord-oversimplified commands
 client.addEventsIn(join(__dirname, "events")); //.commandsIn(join(__dirname, "commands/dos"));
 client.registry
-	.registerCommandsIn(join(__dirname, "commands/dext"))
+	.registerCommandsIn({
+		dir: join(__dirname, "commands/dext"),
+		recursive: true
+	})
 	.registerCommandCheck(SlashCommandCheck.DEFAULT.GUILD_ONLY);

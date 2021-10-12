@@ -2,7 +2,7 @@
 
 import {SlashSubCommand} from "discord-extend";
 import {GuildCommandInteraction, MessageEmbed} from "discord.js";
-import {Client} from "../../Client";
+import {Client} from "../../../Client";
 
 module.exports = class extends SlashSubCommand {
 	public constructor() {
@@ -27,10 +27,14 @@ module.exports = class extends SlashSubCommand {
 		await interaction.deferReply({ephemeral: true});
 		const client = interaction.client as Client<true>,
 			channel = interaction.options.getChannel("spawnchannel", false),
-			{guildId} = interaction;
+			{guildId} = interaction,
+			settings: {
+				spawnChannel?: string;
+				spawnRate?: number;
+			} = client.databases.settings.get(guildId) ?? {};
 
 		if (!channel) {
-			const spawnChannel = client.databases.spawnChannels.get(guildId);
+			const spawnChannel = settings.spawnChannel;
 			interaction.editReply({
 				embeds: [
 					new MessageEmbed({
@@ -38,10 +42,10 @@ module.exports = class extends SlashSubCommand {
 						title: "Current spawn channel",
 						description: `${
 							spawnChannel
-								? "No current spawn channel"
-								: `The current spawn channel of this guild is ${interaction.guild?.channels.fetch(
+								? `The current spawn channel of this guild is ${await interaction.guild?.channels.fetch(
 										spawnChannel
 								  )}`
+								: "No current spawn channel"
 						}`
 					})
 				]
@@ -49,7 +53,8 @@ module.exports = class extends SlashSubCommand {
 			return;
 		}
 
-		client.databases.spawnChannels.set(guildId, channel.id);
+		settings.spawnChannel = channel.id;
+		client.databases.settings.set(guildId, settings);
 		interaction.editReply({
 			embeds: [
 				new MessageEmbed({

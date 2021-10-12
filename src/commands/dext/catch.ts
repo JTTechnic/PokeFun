@@ -27,8 +27,10 @@ module.exports = class extends SlashCommand {
 	public async run(interaction: GuildCommandInteraction) {
 		await interaction.deferReply();
 		const client = interaction.client as Client<true>,
-			{guildId, user} = interaction;
-		if (!client.databases.spawnChannels.get(guildId)) {
+			{guildId, user} = interaction,
+			settings = client.databases.settings.get(guildId);
+
+		if (!settings?.spawnChannel) {
 			interaction.editReply({
 				embeds: [
 					new MessageEmbed({

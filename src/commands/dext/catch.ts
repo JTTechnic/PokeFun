@@ -59,7 +59,7 @@ module.exports = class extends SlashCommand {
 			});
 			return;
 		}
-		const pokemonName = interaction.options.getString("pokemon");
+		const pokemonName = interaction.options.getString("pokemon", true).toLowerCase();
 		if (spawnedPokemon.species.name !== pokemonName) {
 			interaction.editReply({
 				embeds: [

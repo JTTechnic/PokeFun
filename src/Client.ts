@@ -28,13 +28,19 @@ export class Client<Ready extends boolean = boolean> extends DOSClient<Ready> {
 				  }[]
 				| undefined;
 		}>;
-		spawnChannels: Database<string>;
+		settings: Database<
+			| {
+					spawnChannel?: string;
+					spawnRate?: number;
+			  }
+			| undefined
+		>;
 	};
 
 	public constructor(options: ClientOptions) {
 		super(options);
 		this.databases.pokemon = new Database("pokemon");
-		this.databases.spawnChannels = new Database("spawnChannels");
+		this.databases.settings = new Database("settings");
 	}
 
 	public getPokemon(guild: string, user: string) {

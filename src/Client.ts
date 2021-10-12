@@ -24,6 +24,7 @@ export class Client<Ready extends boolean = boolean> extends DOSClient<Ready> {
 				| {
 						name: string;
 						level: number;
+						moves: string[];
 				  }[]
 				| undefined;
 		}>;
@@ -40,7 +41,7 @@ export class Client<Ready extends boolean = boolean> extends DOSClient<Ready> {
 		return (this.databases.pokemon.get(guild) ?? {})[user] ?? [];
 	}
 
-	public setPokemon(guild: string, user: string, pokemon: {name: string; level: number}) {
+	public setPokemon(guild: string, user: string, pokemon: {name: string; level: number; moves: string[]}) {
 		const users = this.databases.pokemon.get(guild) ?? {};
 		const userPokemon = users[user] ?? [];
 		userPokemon.push(pokemon);

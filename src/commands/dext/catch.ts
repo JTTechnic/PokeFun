@@ -57,8 +57,8 @@ module.exports = class extends SlashCommand {
 			});
 			return;
 		}
-		const pokemon = interaction.options.getString("pokemon");
-		if (spawnedPokemon.species.name !== pokemon) {
+		const pokemonName = interaction.options.getString("pokemon");
+		if (spawnedPokemon.species.name !== pokemonName) {
 			interaction.editReply({
 				embeds: [
 					new MessageEmbed({
@@ -73,13 +73,46 @@ module.exports = class extends SlashCommand {
 			return;
 		}
 		client.spawnedPokemon.delete(guildId);
-		const level = randomInt(defaultOptions.minlevel, defaultOptions.maxlevel);
-		client.setPokemon(interaction.guildId, interaction.user.id, {name: pokemon, level});
+		const /* species = await client.pokedex.pokemon.fetch(spawnedPokemon.species.name), */
+			level = randomInt(
+				settings.minLevel ?? defaultOptions.minLevel,
+				settings.maxLevel ?? defaultOptions.maxLevel
+			),
+			moves = spawnedPokemon.moves.filter(move =>
+				move.versionGroupDetails.find(
+					details => details.levelLearnedAt <= level && details.moveLearnMethod.name === "level-up"
+				)
+			),
+			pokemon: {
+				name: string;
+				level: number;
+				moves: string[];
+			} = {
+				name: pokemonName,
+				level,
+				moves: []
+			};
+
+		// eslint-disable-next-line semi-spacing
+		for (let i = 0; i < 4; i++) {
+			if (!moves.length) break;
+			pokemon.moves.push(moves.splice(Math.floor(Math.random() * moves.length), 1)[0].move.name);
+		}
+
+		client.setPokemon(interaction.guildId, interaction.user.id, pokemon);
 		interaction.editReply({
 			embeds: [
 				new MessageEmbed({
 					color: "GREEN",
-					description: `${user} caught a level ${level} ${pokemon}`
+					description: `${user} caught a level ${level} ${pokemonName}`,
+					fields: [
+						{
+							name: "Moves",
+							value: pokemon.moves.length
+								? pokemon.moves.join("\n")
+								: "No moves found, please contact pokeapi.co"
+						}
+					]
 				})
 			]
 		});
